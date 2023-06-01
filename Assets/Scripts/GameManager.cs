@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Scenes properties")]
+    public string mainMenuSceneName;
     [Header("Player references")]
     public GameObject player;
     public Material[] damageStates;
@@ -140,5 +142,10 @@ public class GameManager : MonoBehaviour
 
         // Increment new line
         currentYPosition -= spaceBetweenLines;
+    }
+
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 }
