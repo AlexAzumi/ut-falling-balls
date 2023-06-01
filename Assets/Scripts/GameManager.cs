@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     [Header("UI references")]
     public TextMeshProUGUI pointsText;
     public GameObject gameOverScreen;
+    public TextMeshProUGUI countDownText;
+    public GameObject countDownScreen;
     [Header("Game references")]
     public GameObject pointCube;
     public GameObject regularCube;
@@ -26,10 +28,15 @@ public class GameManager : MonoBehaviour
     public float spaceBetweenLines = 5.0f;
     public int numInitialLines = 5;
     public float[] lineXPositions;
+    public bool startWithCountDown = true;
+    public int countDownTimer = 3;
 
     private int damageTaken = 0;
     private bool deadPlayer = false;
-    private float currentYPosition = 0;
+    private float currentYPosition = 0.0f;
+    private int currentCountDown = 0;
+    private float timer = 0.0f;
+    private bool countDownEnded = false;
 
     private MeshRenderer playerMeshRender;
     private SphereCollider playerSphereCollider;
@@ -51,10 +58,39 @@ public class GameManager : MonoBehaviour
         {
             CreateNewLine();
         }
+
+        if (startWithCountDown)
+        {
+            currentCountDown = countDownTimer;
+            // Block player
+            playerRigidbody.useGravity = false;
+            // Set initial count down in text
+            countDownText.text = countDownTimer.ToString();
+        }
     }
 
     private void Update()
     {
+        if (startWithCountDown && (currentCountDown > 0) && !countDownEnded)
+        {
+            if (timer >= 1)
+            {
+                currentCountDown--;
+                countDownText.text = currentCountDown.ToString();
+                timer = 0;
+            }
+
+            timer += Time.deltaTime;
+        }
+        else if (startWithCountDown && !countDownEnded)
+        {
+            countDownEnded = true;
+            // Start the game
+            countDownScreen.SetActive(false);
+            playerRigidbody.useGravity = true;
+        }
+
+
         // Disable player after death
         if (deadPlayer && playerParticleSystem.isStopped)
         {

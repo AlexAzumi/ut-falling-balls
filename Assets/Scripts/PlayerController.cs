@@ -4,6 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("References")]
     public GameManager gameManager;
+    public Rigidbody playerRigidbody;
     [Header("Properties")]
     public float changeLineSpeed = 0.5f;
 
@@ -26,6 +27,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (playerRigidbody.useGravity == false)
+        {
+            // Ignore movement when the player is locked
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.W))
         {
             // Move to the left line
